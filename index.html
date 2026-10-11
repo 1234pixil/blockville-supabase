@@ -7,7 +7,7 @@
   BLOCKVILLE DEFENSE  ·  Supabase edition
   1. Run supabase-setup.sql in your Supabase project's SQL editor.
   2. In Supabase: Authentication > Sign In / Providers > Email: turn OFF "Confirm email".
-  3. Paste your Project URL and anon public key into SUPABASE_URL and SUPABASE_ANON_KEY below.
+  3. (Done) Project URL and publishable key are filled in below.
   4. Open this file in Chrome, or host it anywhere (GitHub Pages, Netlify, your own site).
 -->
 <title>Blockville Defense</title>
@@ -355,11 +355,11 @@ body:not(.playing) #hud,body:not(.playing) #bottom{display:none!important}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
 <script>
 /* ====== YOUR SUPABASE SETTINGS ====== */
-var SUPABASE_URL='';        // e.g. https://abcdefghijkl.supabase.co
-var SUPABASE_ANON_KEY='';   // Project Settings > API > anon public key
+var SUPABASE_URL='https://bcogtxeqeopvsyrejsdj.supabase.co';        // e.g. https://abcdefghijkl.supabase.co
+var SUPABASE_ANON_KEY='sb_publishable_bPdSIexAYb7pHD0ALc_3wA_vj8XAWqH';   // Project Settings > API > anon public key
 var USERNAME_DOMAIN='players.blockville.app'; // usernames become <name>@this-domain behind the scenes; players never see it
 </script>
 <script>
@@ -2148,7 +2148,8 @@ async function doAuth(create){
       else if(/invalid login|invalid credentials/i.test(m))lgMsg('Wrong username or password.',true);
       else if(/email.*invalid|invalid.*email/i.test(m))lgMsg('Supabase rejected the hidden login address. Change USERNAME_DOMAIN at the top of the file to a domain you own.',true);
       else if(/not confirmed/i.test(m))lgMsg('Turn off "Confirm email" in Supabase (Authentication > Sign In / Providers > Email), then try again.',true);
-      else lgMsg(m||'Could not reach Supabase. Check your connection.',true);
+      else if(!m||/failed to fetch|network|load failed/i.test(m))lgMsg('Could not reach the game server. Check your internet connection and try again.',true);
+      else lgMsg(m,true);
       return;
     }
     if(!r.data.session){lgMsg('Account made, but Supabase wants email confirmation. Turn off "Confirm email" in Authentication settings, then sign in.',true);return}
